@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behind the Filter | ESL B1 Speaking Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        coral: {
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                        },
+                        mint: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar and animations */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.6); }
+        }
+        .timer-glow { animation: pulse-glow 2s infinite; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .print-break { page-break-before: always; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans transition-colors duration-200">
+
+    <!-- Top Sticky Navigation -->
+    <header class="sticky top-0 z-50 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-coral-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-lg tracking-tight bg-gradient-to-r from-brand-600 to-coral-500 bg-clip-text text-transparent">Behind the Filter</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">ESL B1 Speaking Lab • 16-Year-Old Edition</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+                <a href="#vocabulary" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
+                    <i data-lucide="book-open" class="w-4 h-4 text-brand-500"></i> Vocab Bank (<span id="vocab-count-badge">60</span>)
+                </a>
+                <a href="#questions" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
+                    <i data-lucide="message-square" class="w-4 h-4 text-coral-500"></i> 38 Questions
+                </a>
+                <a href="#missions" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
+                    <i data-lucide="gamepad-2" class="w-4 h-4 text-mint-500"></i> Roleplay & Arena
+                </a>
+                <a href="#phrases" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> Power Phrases
+                </a>
+            </nav>
+
+            <!-- Quick Action Buttons -->
+            <div class="flex items-center gap-2">
+                <button id="random-question-btn" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-300 border border-brand-200 dark:border-brand-800 hover:bg-brand-100 transition text-sm font-semibold shadow-sm">
+                    <i data-lucide="shuffle" class="w-4 h-4"></i>
+                    <span>Random Q</span>
+                </button>
+
+                <button onclick="window.print()" title="Print Worksheet" class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <i data-lucide="printer" class="w-5 h-5"></i>
+                </button>
+
+                <button id="theme-toggle" title="Toggle Dark/Light Mode" class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
+                    <i data-lucide="sun" class="w-5 h-5 block dark:hidden"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden pt-10 pb-8 sm:pt-14 sm:pb-12 bg-gradient-to-b from-brand-50/50 via-transparent to-transparent dark:from-brand-950/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 text-xs font-bold uppercase tracking-wider mb-4 border border-brand-200 dark:border-brand-700">
+                <span class="w-2 h-2 rounded-full bg-mint-500 animate-ping"></span>
+                Integrated Speaking Masterclass • 4-in-1 Topic Synergy
+            </div>
+            
+            <h2 class="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight text-slate-900 dark:text-white max-w-4xl mx-auto leading-tight">
+                Behind the Filter: <span class="bg-gradient-to-r from-brand-600 via-coral-500 to-amber-500 bg-clip-text text-transparent">Identity, Vibes & Heroes</span>
+            </h2>
+            
+            <p class="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-normal">
+                Explore real identity vs. online persona, digital mental health, Myers-Briggs personality traits, and modern role models through interactive discussions, flashcards, and debate challenges.
+            </p>
+
+            <!-- 4 Main Pillar Badges -->
+            <div class="mt-8 flex flex-wrap justify-center gap-2 sm:gap-3 max-w-3xl mx-auto">
+                <span class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm font-semibold flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+                    <i data-lucide="smartphone" class="w-4 h-4"></i> Social Media & Influencers
+                </span>
+                <span class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm font-semibold flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                    <i data-lucide="fingerprint" class="w-4 h-4"></i> Personality & Self-Discovery
+                </span>
+                <span class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm font-semibold flex items-center gap-2 text-rose-600 dark:text-rose-400">
+                    <i data-lucide="heart-pulse" class="w-4 h-4"></i> Mental Health & Screen Habits
+                </span>
+                <span class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs sm:text-sm font-semibold flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                    <i data-lucide="shield" class="w-4 h-4"></i> Real Heroes vs. Celebrities
+                </span>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
+                <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="text-2xl font-bold font-display text-brand-600 dark:text-brand-400">60+</div>
+                    <div class="text-xs text-slate-500 font-medium">B1 Vocab & Idioms</div>
+                </div>
+                <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="text-2xl font-bold font-display text-coral-500">38</div>
+                    <div class="text-xs text-slate-500 font-medium">Speaking Prompts</div>
+                </div>
+                <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="text-2xl font-bold font-display text-mint-500">3</div>
+                    <div class="text-xs text-slate-500 font-medium">Interactive Missions</div>
+                </div>
+                <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="text-2xl font-bold font-display text-amber-500">🔊 TTS</div>
+                    <div class="text-xs text-slate-500 font-medium">Audio Pronunciation</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 1: MASTER VOCABULARY BANK (SEARCHABLE & FILTERABLE FLASHCARDS) -->
+        <!-- ========================================================================= -->
+        <section id="vocabulary" class="scroll-mt-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+                <div>
+                    <div class="flex items-center gap-2 text-brand-600 dark:text-brand-400 text-sm font-bold uppercase tracking-wider">
+                        <i data-lucide="book-open" class="w-4 h-4"></i> Section 1
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">Master Vocabulary Bank</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Click any card's audio icon <i data-lucide="volume-2" class="w-3.5 h-3.5 inline"></i> to hear native British/American pronunciation.</p>
+                </div>
+
+                <!-- Search and Topic Filters -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="relative min-w-[220px]">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="vocab-search" placeholder="Search 60+ words..." class="w-full pl-9 pr-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm">
+                    </div>
+                    <select id="vocab-category-filter" class="py-2 px-3 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm text-slate-700 dark:text-slate-200">
+                        <option value="all">🌟 All Categories (60)</option>
+                        <option value="social">📱 Social Media & Algorithms (15)</option>
+                        <option value="personality">🧠 Personality Types & Traits (15)</option>
+                        <option value="mental">🧘 Mental Health & Self-Image (15)</option>
+                        <option value="heroes">🦸 Heroes & Role Models (15)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Vocabulary Cards Grid -->
+            <div id="vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Javascript will render cards dynamically -->
+            </div>
+            
+            <div id="vocab-empty-state" class="hidden text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
+                <i data-lucide="frown" class="w-10 h-10 mx-auto text-slate-400 mb-2"></i>
+                <p class="text-slate-500 font-medium">No matching vocabulary found.</p>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 2: 38 DYNAMIC SPEAKING QUESTIONS -->
+        <!-- ========================================================================= -->
+        <section id="questions" class="scroll-mt-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+                <div>
+                    <div class="flex items-center gap-2 text-coral-500 text-sm font-bold uppercase tracking-wider">
+                        <i data-lucide="message-square" class="w-4 h-4"></i> Section 2
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">38 Dynamic Speaking Prompts</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Structured into 6 progressive rounds from icebreakers to spicy ethical dilemmas.</p>
+                </div>
+
+                <!-- Round Filter Buttons -->
+                <div class="flex flex-wrap gap-1.5 no-print" id="round-filters">
+                    <button data-round="all" class="round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-coral-500 text-white shadow-sm transition">All (38)</button>
+                    <button data-round="1" class="round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 transition">R1: Warmup (6)</button>
+                    <button data-round="2" class="round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 transition">R2: Social (7)</button>
+                    <button data-round="3" class="round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 transition">R3: Personality (7)</button>
+                    <button data-round="4" class="round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 transition">R4: Mental Health (7)</button>
+                    <button data-round="5" class="round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 transition">R5: Heroes (7)</button>
+                    <button data-round="6" class="round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 transition">R6: Dilemmas (4)</button>
+                </div>
+            </div>
+
+            <!-- Question Cards Container -->
+            <div id="questions-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Javascript will inject question cards -->
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 3: INTERACTIVE MISSIONS & GAMES -->
+        <!-- ========================================================================= -->
+        <section id="missions" class="scroll-mt-20">
+            <div class="mb-8">
+                <div class="flex items-center gap-2 text-mint-500 text-sm font-bold uppercase tracking-wider">
+                    <i data-lucide="gamepad-2" class="w-4 h-4"></i> Section 3
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">Interactive Speaking Missions</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Gamified speaking tasks to put target vocabulary into real-time spoken communication.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- MISSION 1: Dr. Real-Talk Advice Clinic -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-xs font-bold uppercase">Roleplay Mission</span>
+                            <i data-lucide="headphones" class="w-5 h-5 text-rose-500"></i>
+                        </div>
+                        <h4 class="text-xl font-display font-bold text-slate-900 dark:text-white mb-2">📻 Dr. Real-Talk Podcast</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">The student acts as a famous teen advice podcaster. Read the letter, give 3 pieces of advice using at least 2 target vocab words.</p>
+
+                        <!-- Dilemma selector -->
+                        <div class="space-y-3" id="advice-letters">
+                            <div class="letter-card p-3.5 rounded-xl border border-brand-200 dark:border-brand-900/60 bg-brand-50/40 dark:bg-brand-950/30 cursor-pointer" onclick="selectLetter(0)">
+                                <div class="flex items-center justify-between text-xs font-bold text-brand-600 dark:text-brand-400 mb-1">
+                                    <span>Letter #1: The Phone Zombie</span>
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 italic">"My best friend is constantly doomscrolling TikTok even when we have lunch together. I feel invisible..."</p>
+                            </div>
+
+                            <div class="letter-card p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 cursor-pointer" onclick="selectLetter(1)">
+                                <div class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                                    <span>Letter #2: The Comparison Trap</span>
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 italic">"Everyone's feeds look like luxury vacations and perfect lives. I feel my life is boring and I hate photos of myself..."</p>
+                            </div>
+
+                            <div class="letter-card p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 cursor-pointer" onclick="selectLetter(2)">
+                                <div class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                                    <span>Letter #3: The Pressure Cooker</span>
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 italic">"I have basketball, piano lessons, exams, and I try to make everyone happy. I'm burnt out and can't sleep..."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 flex items-center justify-between">
+                        <span>🎯 Recommended Vocab:</span>
+                        <span id="active-letter-vocab" class="font-bold text-brand-600 dark:text-brand-400">boundary, unplug, authentic</span>
+                    </div>
+                </div>
+
+                <!-- MISSION 2: 60-Second Debate Arena (With Live Countdown Timer) -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase">Spontaneous Fluency</span>
+                            <i data-lucide="swords" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                        <h4 class="text-xl font-display font-bold text-slate-900 dark:text-white mb-2">⚡ 60-Second Debate Arena</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Pick a motion. 30 seconds to prepare, then speak for a full 60 seconds without stopping!</p>
+
+                        <!-- Motion Box -->
+                        <div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 mb-4 text-center">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Current Motion</span>
+                            <p id="current-debate-motion" class="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                                "Social media apps should legally ban all face-altering beauty filters for users under 18."
+                            </p>
+                        </div>
+
+                        <div class="flex justify-center gap-2 mb-4">
+                            <button onclick="nextDebateMotion()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 transition flex items-center gap-1">
+                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> New Motion
+                            </button>
+                        </div>
+
+                        <!-- Live Timer UI -->
+                        <div class="text-center py-3 bg-brand-50 dark:bg-brand-950/40 rounded-xl border border-brand-200 dark:border-brand-800">
+                            <div id="timer-display" class="font-display text-4xl font-black text-brand-600 dark:text-brand-400">01:00</div>
+                            <div class="flex justify-center gap-2 mt-2">
+                                <button id="timer-toggle-btn" onclick="toggleDebateTimer()" class="px-4 py-1 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                                    <i data-lucide="play" class="w-3.5 h-3.5" id="timer-icon"></i> <span id="timer-btn-text">Start Timer</span>
+                                </button>
+                                <button onclick="resetDebateTimer()" class="px-3 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold transition">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 text-center">
+                        Use: <em>"On one hand... however, if you ask me..."</em>
+                    </div>
+                </div>
+
+                <!-- MISSION 3: Everyday Superhero Award -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase">Presentation Pitch</span>
+                            <i data-lucide="award" class="w-5 h-5 text-emerald-500"></i>
+                        </div>
+                        <h4 class="text-xl font-display font-bold text-slate-900 dark:text-white mb-2">🏆 Everyday Superhero Award</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Nominate ONE real person in your life for the annual Everyday Superhero Medal. Deliver a 2-minute pitch following these 4 checkpoints:</p>
+
+                        <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-300 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
+                                <span><strong>Who is your hero?</strong> (Family member, teacher, local worker, doctor, friend?)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-300 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
+                                <span><strong>Obstacles:</strong> What difficult challenge or hardship have they <em>overcome</em>?</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-300 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
+                                <span><strong>Personality:</strong> Which 3 traits make them special (*resilient, humble, selfless*)?</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-300 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">4</span>
+                                <span><strong>Comparison:</strong> Why do they inspire you more than a millionaire TikToker?</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                        <span>🎯 Goal: 2 Minutes Speaking</span>
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 4: CONVERSATIONAL POWER PHRASES (B1 FLUENCY SCAFFOLDS) -->
+        <!-- ========================================================================= -->
+        <section id="phrases" class="scroll-mt-20">
+            <div class="mb-6">
+                <div class="flex items-center gap-2 text-amber-500 text-sm font-bold uppercase tracking-wider">
+                    <i data-lucide="zap" class="w-4 h-4"></i> Section 4
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">Conversational Power-Phrases</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Use these sentence starters to sound more natural, spontaneous, and confident in B1 discussions.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 block mb-2">💬 Expressing Opinions</span>
+                    <ul class="space-y-2 text-xs text-slate-700 dark:text-slate-200">
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"If you ask me..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"To be totally honest with you..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"From my perspective as a teenager..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"The way I look at it is..."</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block mb-2">🤝 Agreeing & Expanding</span>
+                    <ul class="space-y-2 text-xs text-slate-700 dark:text-slate-200">
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"I couldn't agree more, and plus..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"That's spot on! In fact..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"That's completely relatable because..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"You took the words right out of my mouth!"</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-coral-500 block mb-2">🤔 Polite Disagreeing</span>
+                    <ul class="space-y-2 text-xs text-slate-700 dark:text-slate-200">
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"I see your point, but on the other hand..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"I'm not so sure about that because..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"That might be true for some, however..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"I look at it a bit differently..."</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-500 block mb-2">🔮 Hypothetical (Conditionals)</span>
+                    <ul class="space-y-2 text-xs text-slate-700 dark:text-slate-200">
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"If I were in their shoes, I would..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"If I had to pick between the two..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"Imagine if nobody used social media..."</li>
+                        <li class="p-1.5 rounded bg-slate-50 dark:bg-slate-800/70 font-medium">"Supposing that happened to me, I’d..."</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Random Question Modal -->
+    <div id="random-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl relative animate-in fade-in zoom-in duration-150">
+            <button onclick="closeRandomModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase mb-2">
+                <i data-lucide="sparkles" class="w-4 h-4"></i> Random Spotlight Prompt
+            </div>
+            <h4 id="random-modal-round" class="text-xs font-semibold text-slate-400 mb-2">Round 2 • Social Media</h4>
+            <p id="random-modal-question" class="text-lg sm:text-xl font-display font-bold text-slate-900 dark:text-white mb-6">
+                "Do you think influencers actually live the lives they show on camera, or is 90% of it just curated content?"
+            </p>
+            <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="pickRandomQuestion()" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold flex items-center gap-2 transition">
+                    <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Another One
+                </button>
+                <button onclick="closeRandomModal()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-200 transition">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-8 bg-white dark:bg-slate-900 text-center text-xs text-slate-500 no-print">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>© 2026 ESL Speaking Masterclass • Built for B1 Fluency & Confidence</p>
+            <p class="text-slate-400">Belinay's Learning Workspace • High School ESL Edition</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT DATA & LOGIC -->
+    <script>
+        // --- 1. VOCABULARY DATA (60 ITEMS) ---
+        const vocabData = [
+            // Social Media
+            { id: 1, word: "Curated feed", pos: "noun phrase", category: "social", def: "A social media profile where photos are carefully selected and edited to look perfect.", example: "Remember that her Instagram is just a curated feed, not her real 24/7 life." },
+            { id: 2, word: "Doomscrolling", pos: "noun", category: "social", def: "Continuously scrolling through stressful news or endless short videos.", example: "I spent two hours doomscrolling on TikTok last night before bed." },
+            { id: 3, word: "Digital footprint", pos: "noun phrase", category: "social", def: "The permanent record of photos, comments, and posts you leave online.", example: "Think twice before posting; your digital footprint can last forever." },
+            { id: 4, word: "Influencer", pos: "noun", category: "social", def: "A person on social media who has the power to affect what people buy or believe.", example: "That beauty influencer gets paid thousands for a 30-second review." },
+            { id: 5, word: "Authentic", pos: "adjective", category: "social", def: "Real, genuine, and not fake or staged.", example: "I love creators who are authentic and show their bad days too." },
+            { id: 6, word: "Clickbait", pos: "noun", category: "social", def: "Exaggerated video titles designed to make people click.", example: "The video title was total clickbait; nothing crazy actually happened." },
+            { id: 7, word: "Algorithm", pos: "noun", category: "social", def: "The computer formula that decides which videos appear on your feed.", example: "My YouTube algorithm knows I love gaming and cats." },
+            { id: 8, word: "Sponsored post", pos: "noun", category: "social", def: "A post created because a company paid the creator to promote a product.", example: "She didn't buy that energy drink—it was clearly a sponsored post." },
+            { id: 9, word: "Engagement", pos: "noun", category: "social", def: "The amount of likes, shares, comments, and views a post gets.", example: "Memes always get the highest engagement on my feed." },
+            { id: 10, word: "Aesthetic", pos: "noun / adj", category: "social", def: "An attractive visual style or vibe.", example: "Her room has a very cozy, vintage aesthetic." },
+            { id: 11, word: "Trendsetter", pos: "noun", category: "social", def: "A person who starts a new fashion, dance, or online trend.", example: "He is a true trendsetter; everyone in school copied his jacket style." },
+            { id: 12, word: "Shadowban", pos: "verb / noun", category: "social", def: "When a platform secretly hides someone's content from others.", example: "My videos barely have 50 views; I think TikTok shadowbanned my account." },
+            { id: 13, word: "Unfollow / Mute", pos: "verb", category: "social", def: "To stop seeing someone's updates on your daily feed.", example: "If an account makes you feel insecure, just unfollow or mute them." },
+            { id: 14, word: "Viral", pos: "adjective", category: "social", def: "Spreading extremely quickly across the internet.", example: "His acoustic song cover went viral overnight with 3M views." },
+            { id: 15, word: "To scroll endlessly", pos: "verb phrase", category: "social", def: "Swiping through posts without a clear stopping point.", example: "It's so easy to scroll endlessly when you should be studying." },
+
+            // Personality
+            { id: 16, word: "Introvert", pos: "noun", category: "personality", def: "A person who recharges by spending time alone in quiet settings.", example: "As an introvert, I need quiet time after a long day at school." },
+            { id: 17, word: "Extrovert", pos: "noun", category: "personality", def: "A lively person who gets energy from being around large groups.", example: "My brother is an extrovert who talks to everyone at the party." },
+            { id: 18, word: "Ambivert", pos: "noun", category: "personality", def: "A person who has a balance of both introvert and extrovert traits.", example: "I'm an ambivert—I love parties, but I also love quiet Sundays." },
+            { id: 19, word: "Outspoken", pos: "adjective", category: "personality", def: "Direct and fearless when expressing opinions.", example: "She is very outspoken during class debates and isn't afraid to disagree." },
+            { id: 20, word: "Overthinker", pos: "noun", category: "personality", def: "Someone who worries and thinks too much about small details.", example: "I am a total overthinker; I reread every text message five times." },
+            { id: 21, word: "Empathetic", pos: "adjective", category: "personality", def: "Able to understand and feel another person's emotions.", example: "A good best friend must be empathetic when you have a hard day." },
+            { id: 22, word: "People-pleaser", pos: "noun", category: "personality", def: "Someone who always tries to make others happy, ignoring their own needs.", example: "Saying 'no' is hard when you're a people-pleaser." },
+            { id: 23, word: "Easygoing", pos: "adjective", category: "personality", def: "Relaxed, calm, and not easily stressed or upset.", example: "Our project leader is very easygoing, so working with him is fun." },
+            { id: 24, word: "Ambitious", pos: "adjective", category: "personality", def: "Having a strong desire to achieve great goals or success.", example: "She is very ambitious and wants to study medicine abroad." },
+            { id: 25, word: "Charismatic", pos: "adjective", category: "personality", def: "Having a magnetic personality that attracts and charms people.", example: "The student president is so charismatic when giving speeches." },
+            { id: 26, word: "Self-conscious", pos: "adjective", category: "personality", def: "Nervous or uncomfortable about how you look or act.", example: "I felt self-conscious speaking in front of the whole school." },
+            { id: 27, word: "Reliable", pos: "adjective", category: "personality", def: "Trustworthy; someone you can always count on.", example: "Whenever I need homework help, Max is completely reliable." },
+            { id: 28, word: "Spontaneous", pos: "adjective", category: "personality", def: "Doing things suddenly based on impulse rather than planning.", example: "Let's be spontaneous and take the train to the beach right now!" },
+            { id: 29, word: "Adaptable", pos: "adjective", category: "personality", def: "Able to adjust easily to new situations and changes.", example: "Moving to a new high school requires you to be adaptable." },
+            { id: 30, word: "Quirk", pos: "noun", category: "personality", def: "An unusual or unique habit or personality detail.", example: "One of her quirks is organizing her notebooks by rainbow color." },
+
+            // Mental Health & Self-Image
+            { id: 31, word: "Self-esteem", pos: "noun", category: "mental", def: "How much you respect, value, and feel confident in yourself.", example: "Real self-esteem comes from inside, not from internet likes." },
+            { id: 32, word: "FOMO", pos: "noun abbreviation", category: "mental", def: "Fear Of Missing Out; anxiety that fun events are happening without you.", example: "Seeing everyone at the party on Instagram gave me terrible FOMO." },
+            { id: 33, word: "Digital detox", pos: "noun phrase", category: "mental", def: "A planned period of time when you avoid using smartphones/screens.", example: "I did a weekend digital detox and felt much calmer on Monday." },
+            { id: 34, word: "Burnout", pos: "noun", category: "mental", def: "Exhaustion caused by long-term stress, studying, or overworking.", example: "Balancing exams, sports, and tutoring led to total burnout." },
+            { id: 35, word: "Peer pressure", pos: "noun", category: "mental", def: "Feeling forced to do what others in your age group do to fit in.", example: "He bought those expensive sneakers just because of peer pressure." },
+            { id: 36, word: "Body image", pos: "noun", category: "mental", def: "How you see and feel about your own physical appearance.", example: "Comparing yourself to edited photos can damage your body image." },
+            { id: 37, word: "Comparison trap", pos: "noun phrase", category: "mental", def: "The unhealthy habit of comparing your daily life to others' highlights.", example: "Don't fall into the comparison trap while scrolling Instagram." },
+            { id: 38, word: "Validation", pos: "noun", category: "mental", def: "Proof or feeling that you are accepted, worthy, or liked.", example: "Depending on social media likes for validation can be unhealthy." },
+            { id: 39, word: "To unplug", pos: "verb", category: "mental", def: "To disconnect from digital devices and the internet.", example: "It's healthy to unplug for at least one hour before going to bed." },
+            { id: 40, word: "Overwhelming", pos: "adjective", category: "mental", def: "Feeling too intense, stressful, or hard to manage.", example: "Having five tests in one week was completely overwhelming." },
+            { id: 41, word: "Boundary", pos: "noun", category: "mental", def: "A healthy limit you set to protect your peace and energy.", example: "Setting a boundary like not replying after 10 PM helped my sleep." },
+            { id: 42, word: "Mindset", pos: "noun", category: "mental", def: "A person’s general attitude and way of thinking.", example: "A growth mindset makes difficult challenges easier to handle." },
+            { id: 43, word: "Self-care", pos: "noun", category: "mental", def: "Activities you do purposefully to protect your mental health.", example: "Going for a walk without my phone is my favorite form of self-care." },
+            { id: 44, word: "Recharge", pos: "verb", category: "mental", def: "To rest and recover your physical and mental energy.", example: "I spent Sunday listening to music just to recharge for the week." },
+            { id: 45, word: "Insecure", pos: "adjective", category: "mental", def: "Not confident; full of doubts about oneself.", example: "Most teenagers feel insecure about something, even if they hide it." },
+
+            // Heroes & Role Models
+            { id: 46, word: "Role model", pos: "noun", category: "heroes", def: "A person whose behavior and success serve as an inspiring example.", example: "My older sister is my biggest role model because of her kindness." },
+            { id: 47, word: "To look up to", pos: "phrasal verb", category: "heroes", def: "To admire and respect someone deeply.", example: "I really look up to athletes who use their fame to help charity." },
+            { id: 48, word: "Integrity", pos: "noun", category: "heroes", def: "Doing what is morally right and honest, even when unobserved.", example: "A true leader shows integrity in every decision they make." },
+            { id: 49, word: "Resilience", pos: "noun", category: "heroes", def: "The ability to bounce back quickly after failure or hardship.", example: "Her resilience after her injury inspired the whole volleyball team." },
+            { id: 50, word: "Overcome obstacles", pos: "verb phrase", category: "heroes", def: "To conquer difficulties and keep going.", example: "Great heroes are defined by how they overcome obstacles." },
+            { id: 51, word: "Selfless", pos: "adjective", category: "heroes", def: "Caring more about other people's needs than one's own.", example: "Volunteer firefighters perform selfless acts of courage every day." },
+            { id: 52, word: "Trailblazer", pos: "noun", category: "heroes", def: "A pioneer who does something new and opens paths for others.", example: "Marie Curie was a scientific trailblazer for women worldwide." },
+            { id: 53, word: "Make a difference", pos: "verb phrase", category: "heroes", def: "To have a meaningful, positive impact on the world.", example: "You don't need millions of followers to make a difference." },
+            { id: 54, word: "Moral compass", pos: "noun phrase", category: "heroes", def: "An internal sense that guides you between right and wrong.", example: "When making tough choices, always follow your moral compass." },
+            { id: 55, word: "Advocate", pos: "noun / verb", category: "heroes", def: "Someone who publicly supports a cause or speaks up for others.", example: "She is a passionate advocate for youth mental health." },
+            { id: 56, word: "Humble", pos: "adjective", category: "heroes", def: "Modest; not arrogant or bragging about achievements.", example: "Despite winning the championship, she remained kind and humble." },
+            { id: 57, word: "Courageous", pos: "adjective", category: "heroes", def: "Brave; willing to face danger, fear, or difficulty.", example: "It takes a courageous person to stand up to a bully." },
+            { id: 58, word: "Everyday hero", pos: "noun phrase", category: "heroes", def: "An ordinary person who does extraordinary, kind, or brave things.", example: "Nurses and teachers are the true everyday heroes of society." },
+            { id: 59, word: "Inspire", pos: "verb", category: "heroes", def: "To motivate and give someone the desire to do something great.", example: "His story inspired me to start learning a new language." },
+            { id: 60, word: "Superficial", pos: "adjective", category: "heroes", def: "Shallow; caring only about surface appearances or status.", example: "Judging someone only by their follower count is very superficial." }
+        ];
+
+        // --- 2. QUESTIONS DATA (38 ITEMS) ---
+        const questionsData = [
+            // Round 1
+            { id: 1, round: 1, roundTitle: "R1: Quick-Fire Icebreakers", text: "Which app on your phone has your highest screen time, and what are you usually doing on it?", tip: "Name the app & describe your daily routine." },
+            { id: 2, round: 1, roundTitle: "R1: Quick-Fire Icebreakers", text: "If your personality were a music genre or a specific song, what would it be?", tip: "Use personality adjectives: energetic, chill, chaotic, nostalgic." },
+            { id: 3, round: 1, roundTitle: "R1: Quick-Fire Icebreakers", text: "What is one trend online right now that you find hilarious, and one that you find totally cringe?", tip: "Explain what happens in the trend and why people do it." },
+            { id: 4, round: 1, roundTitle: "R1: Quick-Fire Icebreakers", text: "How do you usually recharge your 'social battery' after a long, busy week at school?", tip: "Introvert vs extrovert habits." },
+            { id: 5, round: 1, roundTitle: "R1: Quick-Fire Icebreakers", text: "Who is the first person that pops into your mind when you hear the word 'hero'?", tip: "Can be famous or someone in your family." },
+            { id: 6, round: 1, roundTitle: "R1: Quick-Fire Icebreakers", text: "If you could permanently delete one slang word or online trend from the internet, which would it be?", tip: "Give reasons why it annoys you." },
+
+            // Round 2
+            { id: 7, round: 2, roundTitle: "R2: Social Media & The Algorithm", text: "Do you think influencers actually live the lives they show on camera, or is 90% of it just curated content?", tip: "Use: curated feed, authentic, superficial." },
+            { id: 8, round: 2, roundTitle: "R2: Social Media & The Algorithm", text: "How does the algorithm influence the way teenagers dress, talk, and think nowadays?", tip: "Discuss trends, TikTok, and aesthetics." },
+            { id: 9, round: 2, roundTitle: "R2: Social Media & The Algorithm", text: "Have you ever bought something or visited a cafe purely because you saw it on a sponsored post or TikTok? Was it worth it?", tip: "Describe the product and the reality." },
+            { id: 10, round: 2, roundTitle: "R2: Social Media & The Algorithm", text: "Should mega-influencers have a moral responsibility for what they promote to younger teenagers (e.g. fast fashion, energy drinks)?", tip: "Use: moral compass, role model, influence." },
+            { id: 11, round: 2, roundTitle: "R2: Social Media & The Algorithm", text: "If you woke up tomorrow with 1 million followers, what would your content be about, and how would you handle hate comments?", tip: "Use Second Conditional: 'If I had 1M followers, I would...'" },
+            { id: 12, round: 2, roundTitle: "R2: Social Media & The Algorithm", text: "Why do you think dramatic gossip and clickbait spread much faster than positive or educational news?", tip: "Talk about internet engagement and human curiosity." },
+            { id: 13, round: 2, roundTitle: "R2: Social Media & The Algorithm", text: "Do you think teenagers today worry enough about their permanent digital footprint?", tip: "Mention future jobs, universities, and privacy." },
+
+            // Round 3
+            { id: 14, round: 3, roundTitle: "R3: Personality Types & Identity", text: "Which label fits you best: introvert, extrovert, or ambivert? Give a real-life situation where this shows.", tip: "Describe your energy in parties vs alone time." },
+            { id: 15, round: 3, roundTitle: "R3: Personality Types & Identity", text: "Do you think a person's online persona matches their real-life personality? Why do people act differently online?", tip: "Use: authentic vs self-conscious." },
+            { id: 16, round: 3, roundTitle: "R3: Personality Types & Identity", text: "In your friend group, what personality role do you usually play (the funny one, the listener, the planner, the overthinker)?", tip: "Give an example of a time your group hung out." },
+            { id: 17, round: 3, roundTitle: "R3: Personality Types & Identity", text: "What personality trait do you admire most in a friend, and what is one trait you find really difficult to tolerate?", tip: "Use: reliable, empathetic, outspoken." },
+            { id: 18, round: 3, roundTitle: "R3: Personality Types & Identity", text: "Do you think personality tests (like MBTI or Zodiac signs) are accurate, or do people just like labeling themselves?", tip: "Share your MBTI type if you know it!" },
+            { id: 19, round: 3, roundTitle: "R3: Personality Types & Identity", text: "Have you ever felt like a people-pleaser? When is it hardest for you to say 'no'?", tip: "Use: boundary, peer pressure." },
+            { id: 20, round: 3, roundTitle: "R3: Personality Types & Identity", text: "How has your personality changed from when you were 12 years old compared to now at 16?", tip: "Use comparatives: more confident, less shy, more adaptable." },
+
+            // Round 4
+            { id: 21, round: 4, roundTitle: "R4: Mental Health & Self-Image", text: "Have you ever experienced FOMO while scrolling on a Friday evening? What did you do to feel better?", tip: "Discuss social comparison vs reality." },
+            { id: 22, round: 4, roundTitle: "R4: Mental Health & Self-Image", text: "How do beauty filters and face-editing apps affect teenagers' self-esteem and body image?", tip: "Use: self-esteem, validation, comparison trap." },
+            { id: 23, round: 4, roundTitle: "R4: Mental Health & Self-Image", text: "What is your opinion on doing a 48-hour digital detox? Could you survive without your phone for an entire weekend?", tip: "What would you do instead: hobbies, sports, reading?" },
+            { id: 24, round: 4, roundTitle: "R4: Mental Health & Self-Image", text: "When school or life gets overwhelming, what is your favorite way to unplug and recharge your mind?", tip: "Mention self-care habits." },
+            { id: 25, round: 4, roundTitle: "R4: Mental Health & Self-Image", text: "Why do you think so many people crave validation (likes, views, comments) from strangers on the internet?", tip: "Discuss psychological needs and insecurity." },
+            { id: 26, round: 4, roundTitle: "R4: Mental Health & Self-Image", text: "If you noticed a friend was showing signs of burnout or feeling down, how would you support them?", tip: "Use: empathetic, listen without judging, be reliable." },
+            { id: 27, round: 4, roundTitle: "R4: Mental Health & Self-Image", text: "Do you think high schools should have a required class on mental wellbeing and managing screen time?", tip: "Give your opinion and propose topics for the class." },
+
+            // Round 5
+            { id: 28, round: 5, roundTitle: "R5: True Heroes vs. Celebrities", text: "What is the fundamental difference between an internet celebrity and a genuine role model?", tip: "Use: integrity, superficial, inspire." },
+            { id: 29, round: 5, roundTitle: "R5: True Heroes vs. Celebrities", text: "Who is an everyday hero in your personal life (teacher, family member, neighbor), and why do you look up to them?", tip: "Describe their actions: selfless, humble, resilient." },
+            { id: 30, round: 5, roundTitle: "R5: True Heroes vs. Celebrities", text: "Does a real hero need to be completely perfect, or do mistakes make a role model more relatable?", tip: "Discuss human flaws and growth mindset." },
+            { id: 31, round: 5, roundTitle: "R5: True Heroes vs. Celebrities", text: "If you had to choose: 15 minutes of viral world fame OR quietly making a huge difference in your community?", tip: "Explain your personal values." },
+            { id: 32, round: 5, roundTitle: "R5: True Heroes vs. Celebrities", text: "What historical or modern figure demonstrates incredible resilience and courage in your eyes?", tip: "Describe how they overcame obstacles." },
+            { id: 33, round: 5, roundTitle: "R5: True Heroes vs. Celebrities", text: "Can fictional characters (from movies, anime, or books) be effective role models for teenagers? Who is your favorite?", tip: "Name the character and their best qualities." },
+            { id: 34, round: 5, roundTitle: "R5: True Heroes vs. Celebrities", text: "In your opinion, what are the top three qualities that every great leader must have?", tip: "Pick from: integrity, empathy, resilience, charisma, vision." },
+
+            // Round 6
+            { id: 35, round: 6, roundTitle: "R6: Spicy Dilemmas & Would You Rather", text: "Would you rather have unlimited screen time with zero privacy (parents see everything), OR only 30 minutes of phone time per day with 100% privacy?", tip: "Defend your choice with 2 solid reasons." },
+            { id: 36, round: 6, roundTitle: "R6: Spicy Dilemmas & Would You Rather", text: "Would you rather be a brilliant introvert who creates amazing things behind the scenes, OR a famous charismatic extrovert in the spotlight?", tip: "Compare the pros and cons of fame vs quiet success." },
+            { id: 37, round: 6, roundTitle: "R6: Spicy Dilemmas & Would You Rather", text: "Would you rather post only 100% authentic, unedited photos of yourself for the rest of your life, OR never post photos again?", tip: "Discuss authenticity and self-image." },
+            { id: 38, round: 6, roundTitle: "R6: Spicy Dilemmas & Would You Rather", text: "Would you rather have a 1-hour coffee chat with your biggest celebrity idol OR a 1-hour conversation with your future 30-year-old self?", tip: "What questions would you ask?" }
+        ];
+
+        // --- 3. DEBATE MOTIONS ---
+        const debateMotions = [
+            "Social media platforms should legally ban all face-altering beauty filters for users under 18.",
+            "Real-life workers like nurses and teachers deserve more fame and money than YouTubers and footballers.",
+            "Introverts make better, more thoughtful world leaders than extroverts.",
+            "High schools should ban smartphones completely during the entire school day, including lunch breaks.",
+            "Influencers should be legally required to label every single edited or retouched photo."
+        ];
+        let currentMotionIndex = 0;
+
+        // --- 4. RENDER VOCABULARY ---
+        const vocabGrid = document.getElementById('vocab-grid');
+        const vocabSearch = document.getElementById('vocab-search');
+        const categoryFilter = document.getElementById('vocab-category-filter');
+        const emptyState = document.getElementById('vocab-empty-state');
+
+        function renderVocab(items) {
+            vocabGrid.innerHTML = '';
+            if (items.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            const categoryBadges = {
+                social: { label: 'Social Media', bg: 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800' },
+                personality: { label: 'Personality', bg: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
+                mental: { label: 'Mental Health', bg: 'bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-300 border-rose-200 dark:border-rose-800' },
+                heroes: { label: 'Heroes', bg: 'bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-300 border-amber-200 dark:border-amber-800' }
+            };
+
+            items.forEach(item => {
+                const badge = categoryBadges[item.category] || categoryBadges.social;
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-300 dark:hover:border-brand-700 transition flex flex-col justify-between group";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${badge.bg}">
+                                ${badge.label}
+                            </span>
+                            <div class="flex items-center gap-1">
+                                <span class="text-[11px] text-slate-400 font-mono italic">${item.pos}</span>
+                                <button onclick="speakWord('${item.word}')" title="Listen to pronunciation" class="p-1 text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
+                                    <i data-lucide="volume-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h4 class="text-base font-display font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">${item.word}</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">${item.def}</p>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 italic">
+                        "${item.example}"
+                    </div>
+                `;
+                vocabGrid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function filterVocab() {
+            const query = vocabSearch.value.toLowerCase().trim();
+            const category = categoryFilter.value;
+
+            const filtered = vocabData.filter(item => {
+                const matchesQuery = item.word.toLowerCase().includes(query) || item.def.toLowerCase().includes(query) || item.example.toLowerCase().includes(query);
+                const matchesCat = category === 'all' || item.category === category;
+                return matchesQuery && matchesCat;
+            });
+
+            renderVocab(filtered);
+        }
+
+        vocabSearch.addEventListener('input', filterVocab);
+        categoryFilter.addEventListener('change', filterVocab);
+
+        // --- 5. RENDER QUESTIONS ---
+        const questionsContainer = document.getElementById('questions-container');
+
+        function renderQuestions(roundFilter = 'all') {
+            questionsContainer.innerHTML = '';
+            const filtered = roundFilter === 'all' ? questionsData : questionsData.filter(q => q.round.toString() === roundFilter);
+
+            filtered.forEach(q => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition flex flex-col justify-between";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2.5">
+                            <span class="text-xs font-bold text-coral-500 dark:text-coral-400">${q.roundTitle}</span>
+                            <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">Q${q.id}</span>
+                        </div>
+                        <p class="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 leading-snug mb-3">${q.text}</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                        <span class="flex items-center gap-1.5 text-slate-400">
+                            <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-amber-500"></i> ${q.tip}
+                        </span>
+                        <button onclick="speakWord('${q.text.replace(/'/g, "\\'")}')" title="Read Question Aloud" class="p-1 hover:text-coral-500 transition">
+                            <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                `;
+                questionsContainer.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Round filter clicks
+        document.querySelectorAll('.round-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.round-btn').forEach(b => {
+                    b.className = "round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 transition";
+                });
+                btn.className = "round-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-coral-500 text-white shadow-sm transition";
+                renderQuestions(btn.dataset.round);
+            });
+        });
+
+        // --- 6. TEXT TO SPEECH (SPEECH SYNTHESIS) ---
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop current speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.92; // slightly slower for language learners
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Audio pronunciation is not supported by your browser.');
+            }
+        }
+
+        // --- 7. RANDOM QUESTION MODAL ---
+        const randomBtn = document.getElementById('random-question-btn');
+        const randomModal = document.getElementById('random-modal');
+        const randomQuestionEl = document.getElementById('random-modal-question');
+        const randomRoundEl = document.getElementById('random-modal-round');
+
+        function pickRandomQuestion() {
+            const random = questionsData[Math.floor(Math.random() * questionsData.length)];
+            randomQuestionEl.innerText = `"${random.text}"`;
+            randomRoundEl.innerText = `${random.roundTitle} • Prompt #${random.id}`;
+            randomModal.classList.remove('hidden');
+            randomModal.classList.add('flex');
+        }
+
+        function closeRandomModal() {
+            randomModal.classList.add('hidden');
+            randomModal.classList.remove('flex');
+        }
+
+        randomBtn.addEventListener('click', pickRandomQuestion);
+
+        // --- 8. ADVICE COLUMN SELECTION ---
+        const letterVocabs = [
+            "boundary, unplug, authentic, outspoken",
+            "curated feed, self-esteem, FOMO, comparison trap",
+            "burnout, people-pleaser, recharge, overwhelming"
+        ];
+
+        function selectLetter(index) {
+            const cards = document.querySelectorAll('.letter-card');
+            cards.forEach((card, i) => {
+                if (i === index) {
+                    card.className = "letter-card p-3.5 rounded-xl border border-brand-200 dark:border-brand-900/60 bg-brand-50/40 dark:bg-brand-950/30 cursor-pointer";
+                } else {
+                    card.className = "letter-card p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 cursor-pointer";
+                }
+            });
+            document.getElementById('active-letter-vocab').innerText = letterVocabs[index];
+        }
+
+        // --- 9. 60-SECOND DEBATE TIMER ---
+        let timerInterval = null;
+        let timeLeft = 60;
+        let isTimerRunning = false;
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            document.getElementById('timer-display').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function toggleDebateTimer() {
+            const btnText = document.getElementById('timer-btn-text');
+            const btnIcon = document.getElementById('timer-icon');
+            const timerContainer = document.getElementById('timer-display').parentElement;
+
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                btnText.innerText = "Resume";
+                timerContainer.classList.remove('timer-glow');
+            } else {
+                isTimerRunning = true;
+                btnText.innerText = "Pause";
+                timerContainer.classList.add('timer-glow');
+
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        btnText.innerText = "Start Timer";
+                        timerContainer.classList.remove('timer-glow');
+                        speakWord("Time is up! Great debate!");
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetDebateTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timeLeft = 60;
+            updateTimerDisplay();
+            document.getElementById('timer-btn-text').innerText = "Start Timer";
+            document.getElementById('timer-display').parentElement.classList.remove('timer-glow');
+        }
+
+        function nextDebateMotion() {
+            currentMotionIndex = (currentMotionIndex + 1) % debateMotions.length;
+            document.getElementById('current-debate-motion').innerText = `"${debateMotions[currentMotionIndex]}"`;
+            resetDebateTimer();
+        }
+
+        // --- 10. DARK / LIGHT THEME TOGGLE ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Initialize Theme from Storage or OS preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // --- INITIAL RENDER ---
+        renderVocab(vocabData);
+        renderQuestions('all');
+        lucide.createIcons();
+    </script>
+</body>
+</html>
